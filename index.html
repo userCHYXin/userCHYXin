@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>株洲之约 - 本地交友平台</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary: #9c27b0;
+            --primary-light: #e1bee7;
+            --secondary: #ff4081;
+            --dark: #4a148c;
+            --light: #f5f5f5;
+            --gray: #757575;
+            --white: #ffffff;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* 头部样式 */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--dark));
+            color: var(--white);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+            color: var(--secondary);
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 2rem;
+        }
+        
+        .nav-links a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 8px 12px;
+            border-radius: 4px;
+        }
+        
+        .nav-links a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .auth-buttons {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .btn {
+            padding: 8px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            display: inline-block;
+        }
+        
+        .btn-login {
+            background-color: transparent;
+            color: var(--white);
+            border: 2px solid var(--white);
+        }
+        
+        .btn-register {
+            background-color: var(--secondary);
+            color: var(--white);
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* 英雄区域 */
+        .hero {
+            background: linear-gradient(rgba(156, 39, 176, 0.8), rgba(74, 20, 140, 0.9)), url('https://images.unsplash.com/photo-1527689368864-3a821dbccc34?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
+            background-size: cover;
+            background-position: center;
+            color: var(--white);
+            padding: 6rem 0;
+            text-align: center;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+        
+        .btn-hero {
+            background-color: var(--secondary);
+            color: var(--white);
+            padding: 12px 35px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 30px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        /* 特色功能 */
+        .features {
+            padding: 5rem 0;
+            background-color: var(--white);
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--dark);
+            position: relative;
+        }
+        
+        .section-title:after {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 4px;
+            background-color: var(--secondary);
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2.5rem;
+        }
+        
+        .feature-card {
+            background: var(--white);
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--primary-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            color: var(--primary);
+            font-size: 2rem;
+        }
+        
+        .feature-card h3 {
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+        
+        /* 用户展示 */
+        .users {
+            padding: 5rem 0;
+            background-color: #f0f2f5;
+        }
+        
+        .user-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        
+        .user-card {
+            background: var(--white);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease;
+        }
+        
+        .user-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .user-img {
+            height: 250px;
+            overflow: hidden;
+        }
+        
+        .user-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .user-card:hover .user-img img {
+            transform: scale(1.05);
+        }
+        
+        .user-info {
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .user-info h3 {
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+        
+        .user-tags {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 1rem 0;
+        }
+        
+        .tag {
+            background-color: var(--primary-light);
+            color: var(--primary);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+        
+        .btn-profile {
+            background-color: var(--primary);
+            color: var(--white);
+            padding: 8px 20px;
+            display: inline-block;
+            margin-top: 1rem;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        /* 活动部分 */
+        .events {
+            padding: 5rem 0;
+            background-color: var(--white);
+        }
+        
+        .event-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+        }
+        
+        .event-card {
+            background: var(--white);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .event-img {
+            height: 200px;
+            overflow: hidden;
+        }
+        
+        .event-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .event-content {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .event-date {
+            background-color: var(--secondary);
+            color: var(--white);
+            padding: 5px 15px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+        
+        .event-content h3 {
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+        
+        .event-details {
+            display: flex;
+            justify-content: space-between;
+            margin-top: auto;
+            padding-top: 1.5rem;
+        }
+        
+        .event-location, .event-attendees {
+            display: flex;
+            align-items: center;
+            color: var(--gray);
+        }
+        
+        .event-location i, .event-attendees i {
+            margin-right: 5px;
+            color: var(--primary);
+        }
+        
+        /* 注册部分 */
+        .cta {
+            padding: 5rem 0;
+            background: linear-gradient(135deg, var(--primary), var(--dark));
+            color: var(--white);
+            text-align: center;
+        }
+        
+        .cta h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .cta p {
+            max-width: 700px;
+            margin: 0 auto 2.5rem;
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        /* 页脚 */
+        footer {
+            background-color: var(--dark);
+            color: var(--white);
+            padding: 4rem 0 2rem;
+        }
+        
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2.5rem;
+            margin-bottom: 3rem;
+        }
+        
+        .footer-column h3 {
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-column h3:after {
+            content: '';
+            position: absolute;
+            width: 50px;
+            height: 3px;
+            background-color: var(--secondary);
+            bottom: 0;
+            left: 0;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+        
+        .footer-links a {
+            color: var(--primary-light);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: var(--white);
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 1.5rem;
+        }
+        
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: var(--white);
+            transition: all 0.3s ease;
+        }
+        
+        .social-links a:hover {
+            background-color: var(--secondary);
+            transform: translateY(-3px);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--primary-light);
+            font-size: 0.9rem;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+            }
+            
+            .nav-links {
+                margin: 1.5rem 0;
+            }
+            
+            .nav-links li {
+                margin: 0 0.8rem;
+            }
+            
+            .auth-buttons {
+                margin-top: 1rem;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .nav-links li {
+                margin: 5px;
+            }
+            
+            .hero {
+                padding: 4rem 0;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 头部导航 -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <i class="fas fa-heart"></i>
+                    <span>株洲之约</span>
+                </div>
+                <ul class="nav-links">
+                    <li><a href="#"><i class="fas fa-home"></i> 首页</a></li>
+                    <li><a href="#"><i class="fas fa-users"></i> 发现</a></li>
+                    <li><a href="#"><i class="fas fa-calendar-alt"></i> 活动</a></li>
+                    <li><a href="#"><i class="fas fa-comments"></i> 聊天</a></li>
+                    <li><a href="#"><i class="fas fa-info-circle"></i> 关于</a></li>
+                </ul>
+                <div class="auth-buttons">
+                    <a href="#" class="btn btn-login">登录</a>
+                    <a href="#" class="btn btn-register">注册</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 英雄区域 -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>遇见株洲，遇见你</h1>
+                <p>株洲本地真实交友平台，发现志同道合的伙伴，参与精彩线下活动，开启属于你的社交圈</p>
+                <a href="#" class="btn btn-hero">立即加入 <i class="fas fa-arrow-right"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 特色功能 -->
+    <section class="features">
+        <div class="container">
+            <h2 class="section-title">我们的特色</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                    <h3>真实认证</h3>
+                    <p>所有用户均通过实名认证，确保交友环境安全可靠，拒绝虚假信息</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <h3>同城活动</h3>
+                    <p>每周组织线下聚会、兴趣小组、户外活动等，丰富您的社交生活</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <h3>智能匹配</h3>
+                    <p>根据您的兴趣爱好、性格特点，精准匹配适合的社交对象</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 用户展示 -->
+    <section class="users">
+        <div class="container">
+            <h2 class="section-title">推荐会员</h2>
+            <div class="user-grid">
+                <div class="user-card">
+                    <div class="user-img">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="用户1">
+                    </div>
+                    <div class="user-info">
+                        <h3>张明 | 28岁</h3>
+                        <p>软件工程师，热爱摄影和徒步</p>
+                        <div class="user-tags">
+                            <span class="tag">摄影</span>
+                            <span class="tag">编程</span>
+                            <span class="tag">户外</span>
+                        </div>
+                        <a href="#" class="btn-profile">查看资料</a>
+                    </div>
+                </div>
+                <div class="user-card">
+                    <div class="user-img">
+                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="用户2">
+                    </div>
+                    <div class="user-info">
+                        <h3>李婷 | 25岁</h3>
+                        <p>小学教师，喜欢阅读和烘焙</p>
+                        <div class="user-tags">
+                            <span class="tag">阅读</span>
+                            <span class="tag">烘焙</span>
+                            <span class="tag">旅行</span>
+                        </div>
+                        <a href="#" class="btn-profile">查看资料</a>
+                    </div>
+                </div>
+                <div class="user-card">
+                    <div class="user-img">
+                        <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="用户3">
+                    </div>
+                    <div class="user-info">
+                        <h3>王浩 | 30岁</h3>
+                        <p>健身教练，运动爱好者</p>
+                        <div class="user-tags">
+                            <span class="tag">健身</span>
+                            <span class="tag">篮球</span>
+                            <span class="tag">音乐</span>
+                        </div>
+                        <a href="#" class="btn-profile">查看资料</a>
+                    </div>
+                </div>
+                <div class="user-card">
+                    <div class="user-img">
+                        <img src="https://images.unsplash.com/photo-1516726817505-f5ed825624d8?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="用户4">
+                    </div>
+                    <div class="user-info">
+                        <h3>刘悦 | 26岁</h3>
+                        <p>平面设计师，艺术爱好者</p>
+                        <div class="user-tags">
+                            <span class="tag">绘画</span>
+                            <span class="tag">设计</span>
+                            <span class="tag">电影</span>
+                        </div>
+                        <a href="#" class="btn-profile">查看资料</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 活动部分 -->
+    <section class="events">
+        <div class="container">
+            <h2 class="section-title">近期活动</h2>
+            <div class="event-grid">
+                <div class="event-card">
+                    <div class="event-img">
+                        <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="活动1">
+                    </div>
+                    <div class="event-content">
+                        <span class="event-date">8月20日 周六</span>
+                        <h3>湘江边骑行活动</h3>
+                        <p>一起骑行探索湘江风光带，享受健康生活，结交新朋友</p>
+                        <div class="event-details">
+                            <div class="event-location">
+                                <i class="fas fa-map-marker-alt"></i> 湘江风光带
+                            </div>
+                            <div class="event-attendees">
+                                <i class="fas fa-users"></i> 32人参加
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="event-card">
+                    <div class="event-img">
+                        <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="活动2">
+                    </div>
+                    <div class="event-content">
+                        <span class="event-date">8月22日 周一</span>
+                        <h3>咖啡品鉴交流会</h3>
+                        <p>在舒适咖啡馆学习咖啡知识，品尝不同风味咖啡，轻松社交</p>
+                        <div class="event-details">
+                            <div class="event-location">
+                                <i class="fas fa-map-marker-alt"></i> 天元区咖啡工坊
+                            </div>
+                            <div class="event-attendees">
+                                <i class="fas fa-users"></i> 18人参加
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="event-card">
+                    <div class="event-img">
+                        <img src="https://images.unsplash.com/photo-1513151233558-d860c5398176?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="活动3">
+                    </div>
+                    <div class="event-content">
+                        <span class="event-date">8月25日 周四</span>
+                        <h3>桌游之夜</h3>
+                        <p>狼人杀、卡坦岛、阿瓦隆等多种桌游，欢乐聚会，锻炼思维</p>
+                        <div class="event-details">
+                            <div class="event-location">
+                                <i class="fas fa-map-marker-alt"></i> 芦淞区桌游吧
+                            </div>
+                            <div class="event-attendees">
+                                <i class="fas fa-users"></i> 24人参加
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 注册部分 -->
+    <section class="cta">
+        <div class="container">
+            <h2>加入株洲最大的本地交友社区</h2>
+            <p>无论您是新来到株洲，还是想扩展社交圈，这里都是您认识新朋友、寻找志同道合伙伴的最佳平台</p>
+            <a href="#" class="btn btn-hero">立即注册 <i class="fas fa-user-plus"></i></a>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <h3>关于我们</h3>
+                    <p>株洲之约是专为株洲本地人打造的交友平台，致力于提供安全、真实的社交环境，帮助您扩大社交圈，发现精彩生活。</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-weixin"></i></a>
+                        <a href="#"><i class="fab fa-qq"></i></a>
+                        <a href="#"><i class="fab fa-weibo"></i></a>
+                        <a href="#"><i class="fab fa-douban"></i></a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3>快速链接</h3>
+                    <ul class="footer-links">
+                        <li><a href="#"><i class="fas fa-angle-right"></i> 首页</a></li>
+                        <li><a href="#"><i class="fas fa-angle-right"></i> 发现朋友</a></li>
+                        <li><a href="#"><i class="fas fa-angle-right"></i> 线下活动</a></li>
+                        <li><a href="#"><i class="fas fa-angle-right"></i> 安全指南</a></li>
+                        <li><a href="#"><i class="fas fa-angle-right"></i> 隐私政策</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>联系我们</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-map-marker-alt"></i> 湖南省株洲市天元区</li>
+                        <li><i class="fas fa-phone"></i> 0731-8888 9999</li>
+                        <li><i class="fas fa-envelope"></i> contact@zhuzhoufriends.com</li>
+                        <li><i class="fas fa-clock"></i> 周一至周五: 9:00 - 18:00</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 株洲之约交友平台 版权所有 | 湘ICP备12345678号</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 简单的滚动效果增强
+        document.addEventListener('DOMContentLoaded', function() {
+            // 导航链接悬停效果
+            const navLinks = document.querySelectorAll('.nav-links a');
+            navLinks.forEach(link => {
+                link.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-3px)';
+                });
+                link.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+            
+            // 卡片悬停效果
+            const cards = document.querySelectorAll('.feature-card, .user-card, .event-card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.boxShadow = '0 10px 25px rgba(0, 0, 0, 0.15)';
+                });
+                card.addEventListener('mouseleave', function() {
+                    this.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.1)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
