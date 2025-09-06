@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>时代新材·新风声！</title>
+  <style>
+    :root{
+      --bg:#0b1020; --card:#0f1724; --accent:#4dd0e1; --accent-2:#7ee3a8; --glass: rgba(255,255,255,0.04);
+      --radius:14px; --maxw:1100px;
+      font-family: "Helvetica Neue", Arial, sans-serif;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;background:linear-gradient(180deg,#061022 0%, #07132a 60%);color:#e6f7f8}
+    .wrap{max-width:var(--maxw);margin:24px auto;padding:20px}
+
+    header{display:flex;align-items:center;gap:16px}
+    .logo{display:flex;align-items:center;gap:12px}
+    .turbine{width:64px;height:64px}
+    h1{font-size:20px;margin:0}
+    p.lead{margin:4px 0 0;color:#cfeff1}
+
+    nav{margin-left:auto;display:flex;gap:10px}
+    nav button{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:8px 12px;border-radius:10px;color:inherit;cursor:pointer}
+    nav button:hover{border-color:var(--accent)}
+
+    /* hero */
+    .hero{margin-top:18px;background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);border-radius:18px;padding:18px;display:grid;grid-template-columns:1fr 340px;gap:18px}
+    .intro{padding:6px}
+    .intro h2{margin:0 0 8px 0;font-size:24px}
+    .intro p{margin:0 0 14px;color:#cfeff1}
+    .cta{display:flex;gap:8px}
+    .btn{background:var(--accent);color:#012027;padding:10px 14px;border-radius:12px;border:none;cursor:pointer;font-weight:600}
+    .btn.ghost{background:transparent;color:var(--accent);border:1px solid rgba(77,208,225,0.12)}
+
+    /* right column: small gallery */
+    .mini-gallery{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+    .mini-gallery img{width:100%;height:100px;object-fit:cover;border-radius:12px;border:2px solid rgba(255,255,255,0.03)}
+
+    /* timeline */
+    .timeline{margin-top:18px}
+    .filters{display:flex;gap:8px;margin-bottom:10px}
+    .filters .chip{padding:8px 10px;border-radius:999px;background:var(--glass);border:1px solid rgba(255,255,255,0.03);cursor:pointer}
+    .timeline-list{display:grid;gap:12px}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);display:flex;gap:12px}
+    .card .thumb{width:120px;height:80px;border-radius:10px;overflow:hidden;flex-shrink:0}
+    .card img{width:100%;height:100%;object-fit:cover}
+    .card .meta{flex:1}
+    .card .meta h3{margin:0 0 6px 0}
+    .card .meta p{margin:0 0 8px;color:#cfeff1}
+    .tag{display:inline-block;padding:6px 8px;border-radius:8px;background:rgba(255,255,255,0.02);font-size:12px;border:1px solid rgba(255,255,255,0.02)}
+
+    /* gallery modal */
+    .modal{position:fixed;inset:0;background:rgba(2,6,12,0.65);display:none;align-items:center;justify-content:center;padding:18px}
+    .modal.active{display:flex}
+    .modal .frame{max-width:900px;width:100%;background:#071329;border-radius:12px;padding:14px}
+    .modal img{width:100%;height:auto;border-radius:8px}
+
+    /* fun widgets */
+    .turbine-big{width:100%;height:120px;display:flex;align-items:center;justify-content:center}
+    .turbine-svg{width:110px;height:110px}
+    .credits{margin-top:16px;color:#99dbe0;font-size:13px}
+
+    /* responsive */
+    @media(max-width:880px){
+      .hero{grid-template-columns:1fr;}
+      .mini-gallery img{height:86px}
+      .card{flex-direction:column}
+      .card .thumb{width:100%;height:180px}
+      nav{display:none}
+    }
+
+    /* subtle animations */
+    .spin{animation:spin 6s linear infinite}
+    @keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+
+    /* confetti */
+    .confetti{position:fixed;pointer-events:none;left:0;top:0;width:100%;height:100%;overflow:visible}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="logo">
+        <!-- simple animated turbine -->
+        <svg class="turbine spin" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#7ee3a8"/><stop offset="1" stop-color="#4dd0e1"/></linearGradient></defs>
+          <circle cx="50" cy="50" r="18" fill="url(#g)" opacity="0.18"/>
+          <g transform="translate(50,50)">
+            <path d="M0-28 L6 -4 L36 -2 L10 8 L16 34 L0 18 L-16 34 L-10 8 L-36 -2 L-6 -4 Z" fill="#bff5f0" opacity="0.12"></path>
+            <circle r="6" fill="#7ee3a8"></circle>
+          </g>
+        </svg>
+        <div>
+          <h1>时代新材·新风声！</h1>
+          <p class="lead">致我们在风里并肩的日子 — 军训 · 迎新晚会 ·溯溪 · 团队建设</p>
+        </div>
+      </div>
+      <nav>
+        <button onclick="scrollToSection('timeline')">活动一览</button>
+        <button onclick="scrollToSection('timeline')">照片墙</button>
+        <button onclick="celebrate()" class="ghost">庆祝</button>
+      </nav>
+    </header>
+
+    <section class="hero" aria-label="介绍">
+      <div class="intro">
+        <h2>我们的回忆，装在风里。</h2>
+        <p>人生海海 有幸相遇
+感谢我生命里一切恰遇其实的存在
+感谢那些我们共同分享与见证的珍贵时刻</p>
+        <div class="cta">
+          <button class="btn" onclick="scrollToSection('timeline')">查看活动</button>
+          <button class="btn ghost" onclick="scrollToSection('timeline')">浏览照片墙</button>
+        </div>
+
+        <div class="turbine-big" style="margin-top:12px">
+          <svg class="turbine-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="a" x1="0" x2="1"><stop offset="0" stop-color="#4dd0e1"/><stop offset="1" stop-color="#7ee3a8"/></linearGradient>
+            </defs>
+            <g transform="translate(100,100)">
+              <circle r="28" fill="#0b2b31" stroke="url(#a)" stroke-width="3"/>
+              <g id="blades" fill="url(#a)">
+                <path d="M0,0 L68,-12 C80,-8 82,12 70,20 L12,36 Z" transform="rotate(0)"/>
+                <path d="M0,0 L68,12 C80,8 82,-12 70,-20 L12,-36 Z" transform="rotate(120)"/>
+                <path d="M0,0 L68,0 C80,0 82,28 70,36 L12,12 Z" transform="rotate(240)"/>
+              </g>
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <aside class="mini-gallery">
+        <img src="jpg/fd3.jpg" alt="1">
+        <img src="jpg/fd2.jpg" alt="2">
+        <img src="jpg/fd4.jpg" alt="3">
+        <img src="jpg/fd5.jpg" alt="4">
+      </aside>
+    </section>
+
+    <section id="timeline" class="timeline" aria-label="活动时间线">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <h2>活动时间线</h2>
+        <div class="filters">
+          <div class="chip" onclick="filterBy('all')">全部</div>
+          <div class="chip" onclick="filterBy('military')">军训</div>
+          <div class="chip" onclick="filterBy('dinner')">团队建设</div>
+          <div class="chip" onclick="filterBy('yingxin')">迎新晚会</div>
+          <div class="chip" onclick="filterBy('peixun')">风电培训</div>
+        </div>
+      </div>
+
+      <div class="timeline-list" id="list">
+        <!-- cards generated by JS -->
+      </div>
+    </section>
+
+    <div class="modal" id="modal">
+      <div class="frame">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div style="font-weight:700">照片预览</div>
+          <div><button onclick="closeModal()" style="background:transparent;border:none;color:inherit;cursor:pointer">关闭 ✕</button></div>
+        </div>
+        <img id="modalImg" src="" alt="大图">
+        <div id="modalInfo" style="margin-top:8px;color:#cfeff1"></div>
+      </div>
+    </div>
+
+  </div>
+  <canvas class="confetti" id="confettiCanvas"></canvas>
+
+  <script>
+    const EVENTS = [
+      {
+        id:1, type:'military', title:'英姿飒爽的军训周', date:'2025-07-03',
+        img:'jpg/fd1.jpg',
+        desc:'烈日下的磨砺，我们一起喊口号、立正稍息——风在身后，伙伴在旁。'
+      },
+      {
+        id:2, type:'dinner', title:'浏阳溯溪～湘水湘逢', date:'2025-08-24',
+        img:'jpg/fd2.jpg',
+        desc:'暂别城市的喧嚣与案头的繁忙，让我们共同奔赴一场与自然相拥的团队之旅——「浏阳溯溪 · 湘水湘逢」。'
+      },
+      {
+        id:3, type:'yingxin', title:'迎新晚会：我是最靓的仔', date:'2025-08-29',
+        img:'jpg/fd3.jpg',
+        desc:'灯光、舞台、还有第一次登台演出的紧张与欢乐。'
+      },
+      {
+        id:4, type:'dinner', title:'不散筵席', date:'2024-09-04',
+        img:'jpg/fd7.jpg',
+        desc:'致异地工厂的家人们：一叶浮萍归大海，山水相逢自有期'
+      },
+      {
+        id:5, type:'peixun', title:'风电培训', date:'2024-09-05',
+        img:'jpg/fd5.jpg',
+        desc:'我们都是时代最美的追风者。'
+      }
+    ];
+
+    const listEl = document.getElementById('list');
+    function renderList(items){
+      listEl.innerHTML = items.map(it => `
+        <div class="card" data-type="${it.type}" onclick="openModal(${it.id})">
+          <div class="thumb"><img src="${it.img}" alt="${escapeHtml(it.title)}"></div>
+          <div class="meta">
+            <h3>${escapeHtml(it.title)}</h3>
+            <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px"><div class="tag">${it.date}</div><div class="tag">${capitalize(it.type)}</div></div>
+            <p>${escapeHtml(it.desc)}</p>
+            <div style="margin-top:8px"><button class="btn" onclick="openModal(event, ${it.id})">查看照片</button></div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function escapeHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+    function capitalize(s){return s.charAt(0).toUpperCase()+s.slice(1)}
+
+    renderList(EVENTS);
+
+    /* filtering */
+    function filterBy(type){
+      if(type==='all') renderList(EVENTS);
+      else renderList(EVENTS.filter(e=>e.type===type));
+      document.getElementById('list').scrollIntoView({behavior:'smooth'});
+    }
+
+    /* modal */
+    const modal = document.getElementById('modal');
+    const modalImg = document.getElementById('modalImg');
+    const modalInfo = document.getElementById('modalInfo');
+    function openModal(e, id){
+      if(e && e.stopPropagation) e.stopPropagation();
+      const ev = EVENTS.find(x=>x.id===id);
+      if(!ev) return;
+      modalImg.src = ev.img;
+      modalInfo.textContent = ev.title + ' · ' + ev.date + '\n' + ev.desc;
+      modal.classList.add('active');
+    }
+    function closeModal(){ modal.classList.remove('active'); }
+    modal.addEventListener('click', (ev)=>{ if(ev.target===modal) closeModal(); });
+
+    
+
+    function scrollToSection(id){
+      document.getElementById(id).scrollIntoView({behavior:'smooth'});
+    }
+
+    /* celebrate - small confetti */
+    function celebrate(){ createConfetti(); }
+
+    // simple confetti - small vanilla implementation
+    function createConfetti(){
+      const canvas = document.getElementById('confettiCanvas');
+      const ctx = canvas.getContext('2d');
+      let W = canvas.width = window.innerWidth; let H = canvas.height = window.innerHeight;
+      const pieces = [];
+      for(let i=0;i<80;i++){ pieces.push({x:Math.random()*W,y:Math.random()*H- H, r:Math.random()*6+4, vx:(Math.random()-0.5)*4, vy:Math.random()*4+2, c:randomColor()}); }
+      let stop=false; let t=0;
+      function frame(){ ctx.clearRect(0,0,W,H); t+=1; for(const p of pieces){ p.x+=p.vx; p.y+=p.vy; p.vy+=0.04; ctx.fillStyle=p.c; ctx.fillRect(p.x,p.y,p.r, p.r*0.6); }
+        if(t>160) stop=true; if(!stop) requestAnimationFrame(frame); else setTimeout(()=>ctx.clearRect(0,0,W,H),600);
+      }
+      frame();
+      function randomColor(){ const arr=['#7ee3a8','#4dd0e1','#ffd166','#ff8fab','#c6a4ff']; return arr[Math.floor(Math.random()*arr.length)]; }
+    }
+
+    // small usability: prevent button inside card from closing event
+    document.addEventListener('click', function(e){ if(e.target.matches('.card .btn')) e.stopPropagation(); });
+
+    // accessibility: keyboard ESC to close modal
+    document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeModal(); });
+
+    // small polite note: allow user to replace placeholder images by drag'n'drop onto cards
+    // This is a lightweight in-browser replace (no server). Drag a local image onto the card to preview it.
+    document.addEventListener('dragover', (e)=>{ e.preventDefault(); });
+    document.addEventListener('drop', async (e)=>{
+      e.preventDefault();
+      const dt = e.dataTransfer; if(!dt.files || dt.files.length===0) return;
+      const f = dt.files[0]; if(!f.type.startsWith('image/')) return alert('请拖入图片文件');
+      const reader = new FileReader(); reader.onload = ()=>{
+        // replace the first card image as demo
+        const url = reader.result; const img = document.querySelector('.card .thumb img'); if(img) img.src = url; alert('本地图片已用于预览（仅本地会话，刷新后恢复）。');
+      };
+      reader.readAsDataURL(f);
+    });
+
+    // small polish: if user has many events, animate turbine blades
+    // Rotate blades slower when page is idle
+    let spinEl = document.querySelector('.spin');
+    let speed = 6; // seconds per revolution
+    setInterval(()=>{
+      const rect = document.documentElement.getBoundingClientRect();
+      const inView = rect.top===0;
+      // intentionally simple - keep spinning
+    },2000);
+
+    // finally: tiny helper for opening modal when clicking anywhere on a card
+    function openModal(eventOrId, maybeId){
+      // overload: (event, id) or (id)
+      let id;
+      if(typeof eventOrId === 'number') id = eventOrId; else id = maybeId;
+      if(!id){ // clicked on card element
+        const el = (eventOrId && eventOrId.currentTarget) || (eventOrId && eventOrId.target);
+      }
+      const ev = EVENTS.find(x=>x.id===id);
+      if(!ev) return;
+      modalImg.src = ev.img; modalInfo.textContent = ev.title + ' · ' + ev.date + '\n' + ev.desc; modal.classList.add('active');
+    }
+
+    // NOTE: we declared openModal above with two different signatures; the btns call openModal(event, id)
+    window.openModal = function(eOrId, id){
+      if(typeof eOrId === 'object' && eOrId.preventDefault){ eOrId.stopPropagation(); openModal(id); }
+      else openModal(eOrId);
+    };
+
+    window.closeModal = closeModal; window.filterBy = filterBy; window.scrollToSection = scrollToSection; window.celebrate = celebrate;
+
+  </script>
+</body>
+</html>
+

@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>天空｜首页</title>
+  <meta name="description" content="个人生活记录与项目集：学无止境，渐行渐远。" />
+  <style>
+    /* ============ 基础样式与主题 ============ */
+    :root{
+      --bg: #fafbfc;
+      --card: #ffffff;
+      --text: #0f172a; /* slate-900 */
+      --muted: #475569; /* slate-600 */
+      --border: #e2e8f0; /* slate-200 */
+      --accent: #2563eb; /* blue-600 */
+      --accent-2: #22c55e; /* green-500 */
+      --shadow: 0 10px 20px rgba(2,6,23,0.06), 0 3px 6px rgba(2,6,23,0.05);
+      --radius: 16px;
+    }
+    [data-theme="dark"]{
+      --bg: #0b1020;
+      --card: #0f172a;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --border: #1f2a44;
+      --shadow: 0 10px 20px rgba(0,0,0,0.35), 0 3px 6px rgba(0,0,0,0.3);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, PingFang SC, Microsoft YaHei, Noto Sans CJK SC, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      color:var(--text); background:var(--bg);
+      line-height:1.6; letter-spacing: .2px;
+    }
+    img{max-width:100%; display:block}
+    a{color:var(--accent); text-decoration:none}
+    a:hover{text-decoration:underline}
+    .container{max-width:1100px; margin:0 auto; padding:0 20px}
+
+    /* 背景活泼渐变气泡 */
+    .bg-blobs{position:fixed; inset:0; overflow:hidden; pointer-events:none; z-index:-1}
+    .blob{position:absolute; filter: blur(48px); opacity:.18; animation: float 16s ease-in-out infinite}
+    .blob.one{width:520px; height:520px; top:-120px; right:-160px; background: radial-gradient( circle at 35% 35%, #60a5fa, #22d3ee );}
+    .blob.two{width:480px; height:480px; bottom:-160px; left:-160px; background: radial-gradient( circle at 65% 65%, #fb7185, #f59e0b ); animation-delay: -6s}
+    @keyframes float{ 0%,100%{transform: translateY(0) translateX(0)} 50%{transform: translateY(20px) translateX(8px)} }
+
+    /* ============ 组件 ============ */
+    .card{background:var(--card); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow)}
+    .btn{display:inline-flex; align-items:center; gap:8px; padding:10px 14px; border-radius:12px; border:1px solid var(--border); background:var(--card); color:var(--text); cursor:pointer; transition: .2s ease}
+    .btn:hover{transform: translateY(-1px); box-shadow: var(--shadow)}
+    .btn.primary{background: var(--accent); color:#fff; border-color: transparent}
+    .btn.ghost{background: transparent}
+    .chip{display:inline-block; padding:4px 10px; border-radius:999px; border:1px solid var(--border); font-size:12px; color:var(--muted)}
+    .badge{font-size:12px; padding:4px 8px; border-radius:8px; background:#e2fbe8; color:#166534; border:1px solid #bbf7d0}
+    [data-theme="dark"] .badge{background:#052e1a; color:#86efac; border-color:#064e3b}
+
+    /* ============ 顶部导航 ============ */
+    .nav{position:sticky; top:0; backdrop-filter: blur(8px); border-bottom:1px solid var(--border); z-index:20}
+    .nav-wrap{display:flex; align-items:center; justify-content:space-between; padding:10px 0}
+    .nav a{color:var(--text)}
+    .nav .links{display:none; gap:18px}
+    .nav .brand{font-weight:700}
+    .theme-toggle{margin-left:8px}
+    @media (min-width: 768px){ .nav .links{display:flex} }
+
+    /* ============ 英雄区 ============ */
+    .hero{display:grid; grid-template-columns: 1.5fr 1fr; gap:20px; align-items:stretch; margin-top:24px}
+    .hero h1{margin:0 0 8px; font-size: clamp(24px, 2.4vw, 34px)}
+    .hero .subtitle{color:var(--muted)}
+    .profile-card{padding:22px}
+    .profile-row{display:grid; grid-template-columns: 48px 1fr; gap:12px; align-items:center}
+    .avatar{width:48px; height:48px; border-radius:14px; background:linear-gradient(135deg, #4f46e5, #06b6d4); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700}
+    .kvs{display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:12px; margin:18px 0}
+    .kv{display:flex; align-items:center; gap:8px; color:var(--muted); font-size:14px}
+
+    /* ============ 项目区 ============ */
+    .section{margin-top:40px}
+    .section h2{font-size: clamp(20px, 2vw, 26px); margin:0 0 10px}
+    .section .lead{color:var(--muted); margin-bottom:14px}
+
+    .filters{display:flex; gap:8px; flex-wrap:wrap}
+    .filters button[aria-pressed="true"]{background:var(--accent); color:#fff; border-color:transparent}
+
+    .grid{display:grid; grid-template-columns: repeat(1, minmax(0, 1fr)); gap:16px; margin-top:16px}
+    @media (min-width: 640px){ .grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (min-width: 960px){ .grid{ grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+
+    .proj{padding:16px; display:flex; flex-direction:column; gap:10px}
+    .proj h3{margin:0; font-size:18px}
+    .proj .desc{color:var(--muted); font-size:14px}
+    .proj .meta{display:flex; justify-content:space-between; align-items:center}
+    .tags{display:flex; flex-wrap:wrap; gap:6px; margin-top:4px}
+
+    /* ============ 时间轴 ============ */
+    .timeline{position:relative; padding-left:24px; margin-top:12px}
+    .timeline:before{content:""; position:absolute; left:8px; top:0; bottom:0; width:2px; background:linear-gradient(180deg, var(--border), transparent)}
+    .tl-item{position:relative; margin:14px 0}
+    .tl-dot{position:absolute; left:-2px; top:8px; width:14px; height:14px; border-radius:999px; background:var(--accent); box-shadow:0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent)}
+    .tl-card{padding:14px 16px}
+    .tl-title{margin:0 0 6px; font-weight:600}
+    .tl-time{font-size:12px; color:var(--muted)}
+
+    /* ============ 显示动画 ============ */
+    .reveal{opacity:0; transform: translateY(8px); transition: .5s ease}
+    .reveal.in{opacity:1; transform:none}
+
+    /* ============ 页脚 ============ */
+    footer{margin:40px 0 60px; color:var(--muted); font-size:14px}
+
+    /* 辅助 */
+    .sr-only{position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); border:0}
+  </style>
+</head>
+<body>
+  <div class="bg-blobs" aria-hidden="true">
+    <div class="blob one"></div>
+    <div class="blob two"></div>
+  </div>
+
+  <a class="sr-only" href="#main">跳转到正文</a>
+
+  <!-- 顶部导航 -->
+  <nav class="nav">
+    <div class="container nav-wrap">
+      <div class="brand">我的知识星球</div>
+      <div class="links" role="navigation" aria-label="主导航">
+        <a href="#about">关于</a>
+        <a href="#projects">项目</a>
+        <a href="#timeline">时间轴</a>
+        <a href="#contact">联系</a>
+      </div>
+      <div>
+        <button id="themeBtn" class="btn theme-toggle" aria-pressed="false" title="切换主题" type="button">🌓 主题</button>
+      </div>
+    </div>
+  </nav>
+
+  <main id="main" class="container">
+    <!-- 英雄区：基本情况与名片 -->
+    <section class="hero">
+      <article class="card profile-card reveal" id="about">
+        <header>
+          <h1 id="name">Jiajun·Han</h1>
+          <p class="subtitle" id="title">软件开发工程师 / 应用软件开发</p>
+        </header>
+        <p id="intro" style="margin-top:10px">
+          专注于应用软件系统的架构设计与研发实施，业余时间乐于探索开发工具与写作，持续输出技术思考与实践总结。
+        </p>
+        <div class="kvs">
+          <div class="kv">📍 <span id="loc">湖南：株洲</span></div>
+          <div class="kv">🎯 正在关注：<span id="now">小程序点餐系统与数据平台治理</span></div>
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap">
+          <a class="btn primary" href="#projects">查看项目集</a>
+          <a class="btn" href="#timeline">查看人生时间轴</a>
+          <span class="badge" id="motto">座右铭：认真生活，保持好奇。</span>
+        </div>
+      </article>
+
+      <aside class="card profile-card reveal" aria-label="个人名片">
+        <div class="profile-row">
+          <div class="avatar" id="avatar">你</div>
+          <div>
+            <div style="font-weight:600" id="cardName">你的名字</div>
+            <div style="font-size:12px; color:var(--muted)">个人名片</div>
+          </div>
+        </div>
+        <ul style="margin:14px 0 0; padding-left:18px">
+          <li>关注方向：数据平台 / 小程序 / 系统工程</li>
+          <li>记录主题：项目进展、读书、运动、年度复盘</li>
+          <li>关键词：务实、可度量、持续迭代</li>
+        </ul>
+        <div style="display:flex; gap:8px; margin-top:14px; flex-wrap:wrap">
+          <span class="chip">认真</span>
+          <span class="chip">活泼</span>
+          <span class="chip">有趣</span>
+        </div>
+        <div style="display:flex; gap:8px; margin-top:14px; flex-wrap:wrap">
+          <a class="btn" id="emailLink" href="mailto:you@example.com">✉️ 邮件联系</a>
+          <a class="btn ghost" id="githubLink" href="#" target="_blank" rel="noreferrer">🐙 GitHub</a>
+        </div>
+      </aside>
+    </section>
+
+    <!-- 项目区 -->
+    <section class="section" id="projects" aria-labelledby="projectsTitle">
+      <header>
+        <h2 id="projectsTitle">项目一览</h2>
+        <p class="lead">严谨落地每一个想法，并为其保留一点有趣的边角。</p>
+      </header>
+
+      <div class="filters" role="tablist" aria-label="项目筛选">
+        <button class="btn" role="tab" aria-selected="true" aria-pressed="true" data-filter="all" type="button">全部</button>
+        <button class="btn" role="tab" aria-selected="false" aria-pressed="false" data-filter="ongoing" type="button">进行中</button>
+        <button class="btn" role="tab" aria-selected="false" aria-pressed="false" data-filter="done" type="button">已完成</button>
+      </div>
+
+      <div class="grid" id="projectGrid" aria-live="polite"></div>
+    </section>
+
+    <!-- 时间轴 -->
+    <section class="section" id="timeline" aria-labelledby="timelineTitle">
+      <h2 id="timelineTitle">人生与经历时间轴</h2>
+      <div class="timeline" id="timelineList"></div>
+    </section>
+
+    <!-- 联系方式 -->
+    <section class="section" id="contact" aria-labelledby="contactTitle">
+      <h2 id="contactTitle">联系我</h2>
+      <div class="card tl-card reveal">
+        <p style="margin:0 0 6px">如果你对我的项目或记录感兴趣，欢迎交流。</p>
+        <p style="margin:0">
+          📫 邮箱：<a id="contactEmail" href="mailto:you@example.com">you@example.com</a>
+          <span style="margin:0 8px; color:var(--muted)">|</span>
+          🐙 GitHub：<a id="contactGithub" href="#" target="_blank" rel="noreferrer">@yourname</a>
+        </p>
+      </div>
+    </section>
+
+    <footer class="container">
+      <p>© <span id="year"></span> 我的生活记录 · 严肃认真 ✦ 不失活泼</p>
+    </footer>
+  </main>
+
+  <script>
+    // ======= 数据（按需替换为你的真实信息）=======
+    const profile = {
+      name: 'Jiajun·Han',
+      title: '软件研发工程师 / 系统架构',
+      location: '湖南·株洲',
+      email: 'hanjiajunx@163.com',
+      github: 'https://github.com/yourname',
+      intro: '专注于应用软件系统的架构设计与研发实施，业余时间乐于探索开发工具与写作，持续输出技术思考与实践总结。',
+      motto: '',
+      now: '基于金蝶云苍穹的应用系统研发与实施'
+    };
+
+    const projects = [
+    {
+        name: '基于微服务的分布式商城系统',
+        description: '该项目基于SpringBoot构建了一个分布式商城系统，通过集成多种中间件实现了高并发处理、数据一致性及系统安全性',
+        tags: ['SpringBoot','RabbitMQ','Jmeter','Shiro','Vue.js'],
+        status: 'done', // ongoing | done
+        type: 'work',
+        link: '#'
+      },
+      {
+        name: 'TMT点餐小程序',
+        description: '从菜单管理、下单到支付的端到端小程序方案，支持商品画像与订单状态流转。',
+        tags: ['WeChat Mini Program','Cloud Functions','VantUI'],
+        status: 'ongoing', // ongoing | done
+        type: 'work',
+        link: '#'
+      },
+      {
+        name: '链式学习系统',
+        description: '基于教育工程和软件工程的系统（调研阶段）。',
+        tags: ['Education','Vue.js','Software Engineering'],
+        status: 'ongoing',
+        type: 'work',
+        link: '#'
+      },
+      {
+        name: '基于Activity的工业流程软件设计',
+        description: '通用型流程自动化工具，提高工作效率与工业生产效率。',
+        tags: ['BPMN','Activiti','RPA'],
+        status: 'done',
+        type: 'life',
+        link: '#'
+      },
+      {
+        name: '开源小工具集',
+        description: '若干命令行与脚本工具，用于批量处理 Excel、图片与 Markdown 文档。',
+        tags: ['Node.js','CLI','Automation'],
+        status: 'done',
+        type: 'work',
+        link: '#'
+      }
+    ];
+
+    const timeline = [
+      { time: '2025', title: '系统化搭建个人网站', detail: '把零散记录汇总到统一入口，形成“项目—过程—沉淀”的闭环。' },
+      { time: '2024', title: '数据平台项目落地', detail: '牵头数据集成与治理工作，面向检索与分析优化链路与策略。' },
+      { time: '更早', title: '打基础', detail: '打磨编程内功，参与多类业务系统的建设与维护。' },
+    ];
+
+    // ======= 渲染 =======
+    function renderProfile(){
+      const initials = profile.name?.trim()?.slice(0,1) || '你';
+      document.getElementById('name').textContent = profile.name;
+      document.getElementById('cardName').textContent = profile.name;
+      document.getElementById('avatar').textContent = initials;
+      document.getElementById('title').textContent = profile.title;
+      document.getElementById('intro').textContent = profile.intro;
+      document.getElementById('loc').textContent = profile.location;
+      document.getElementById('now').textContent = profile.now;
+      document.getElementById('motto').textContent = '座右铭：' + profile.motto;
+      const emailHref = 'mailto:' + profile.email;
+      document.getElementById('emailLink').href = emailHref;
+      document.getElementById('contactEmail').href = emailHref;
+      document.getElementById('contactEmail').textContent = profile.email;
+      document.getElementById('githubLink').href = profile.github;
+      document.getElementById('contactGithub').href = profile.github;
+      document.getElementById('contactGithub').textContent = '@' + (profile.github.split('/').pop() || 'yourname');
+      document.getElementById('year').textContent = new Date().getFullYear();
+    }
+
+    function projStatusLabel(status){
+      return status === 'ongoing' ? '进行中' : '已完成';
+    }
+
+    function createProjectCard(p){
+      const tagHtml = p.tags.map(t => `<span class="chip">${t}</span>`).join('');
+      return `
+      <article class="card proj reveal" data-status="${p.status}">
+        <header>
+          <h3>${p.name}</h3>
+          <div class="meta">
+            <span class="badge">${projStatusLabel(p.status)}</span>
+            <a href="${p.link}" target="_blank" rel="noreferrer" class="btn ghost" aria-label="访问项目链接">🔗 前往</a>
+          </div>
+        </header>
+        <p class="desc">${p.description}</p>
+        <div class="tags">${tagHtml}</div>
+      </article>`;
+    }
+
+    function renderProjects(filter='all'){
+      const grid = document.getElementById('projectGrid');
+      const list = projects.filter(p => filter==='all' ? true : p.status === filter);
+      grid.innerHTML = list.map(createProjectCard).join('');
+      revealObserve();
+    }
+
+    function renderTimeline(){
+      const box = document.getElementById('timelineList');
+      box.innerHTML = timeline.map(item => `
+        <div class="tl-item reveal">
+          <span class="tl-dot" aria-hidden="true"></span>
+          <article class="card tl-card">
+            <h3 class="tl-title">${item.title}</h3>
+            <div class="tl-time">${item.time}</div>
+            <p style="margin:8px 0 0">${item.detail}</p>
+          </article>
+        </div>
+      `).join('');
+      revealObserve();
+    }
+
+    // ======= 交互：筛选与主题 =======
+    function setupFilters(){
+      const buttons = document.querySelectorAll('.filters [data-filter]');
+      buttons.forEach(btn => btn.addEventListener('click', () => {
+        const filter = btn.getAttribute('data-filter');
+        buttons.forEach(b => { b.setAttribute('aria-pressed','false'); b.setAttribute('aria-selected','false'); });
+        btn.setAttribute('aria-pressed','true');
+        btn.setAttribute('aria-selected','true');
+        renderProjects(filter);
+      }));
+    }
+
+    function setTheme(theme){
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('theme', theme);
+      document.getElementById('themeBtn').setAttribute('aria-pressed', theme==='dark');
+    }
+    function setupTheme(){
+      const saved = localStorage.getItem('theme');
+      if(saved){ setTheme(saved); }
+      document.getElementById('themeBtn').addEventListener('click', () => {
+        const now = document.documentElement.getAttribute('data-theme');
+        setTheme(now === 'dark' ? 'light' : 'dark');
+      });
+    }
+
+    // ======= 交互：滚动显示动画 =======
+    let revealObserver;
+    function revealObserve(){
+      if(revealObserver) revealObserver.disconnect();
+      const items = document.querySelectorAll('.reveal');
+      revealObserver = new IntersectionObserver((entries) => {
+        for(const e of entries){ if(e.isIntersecting){ e.target.classList.add('in'); } }
+      }, { threshold: 0.2 });
+      items.forEach(el => revealObserver.observe(el));
+    }
+
+    // ======= 启动 =======
+    renderProfile();
+    renderProjects('all');
+    renderTimeline();
+    setupFilters();
+    setupTheme();
+    revealObserve();
+  </script>
+</body>
+</html>
