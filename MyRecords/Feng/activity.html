@@ -141,7 +141,7 @@
 
     <section id="timeline" class="timeline" aria-label="活动时间线">
       <div style="display:flex;align-items:center;justify-content:space-between">
-        <h2>活动时间线</h2>
+        <h2 onclick="celebrate()">活动时间线（点击有惊喜）</h2>
         <div class="filters">
           <div class="chip" onclick="filterBy('all')">全部</div>
           <div class="chip" onclick="filterBy('military')">军训</div>
@@ -188,27 +188,31 @@
         desc:'灯光、舞台、还有第一次登台演出的紧张与欢乐。'
       },
       {
-        id:4, type:'dinner', title:'不散筵席', date:'2024-09-04',
+        id:4, type:'dinner', title:'不散筵席', date:'2025-09-04',
         img:'jpg/fd7.jpg',
         desc:'致异地工厂的家人们：一叶浮萍归大海，山水相逢自有期'
       },
       {
-        id:5, type:'peixun', title:'风电培训', date:'2024-09-05',
+        id:5, type:'peixun', title:'风电培训', date:'2025-09-05',
         img:'jpg/fd5.jpg',
         desc:'我们都是时代最美的追风者。'
       }
     ];
 
     const listEl = document.getElementById('list');
+    const modal = document.getElementById('modal');
+    const modalImg = document.getElementById('modalImg');
+    const modalInfo = document.getElementById('modalInfo');
+
     function renderList(items){
       listEl.innerHTML = items.map(it => `
-        <div class="card" data-type="${it.type}" onclick="openModal(${it.id})">
+        <div class="card" data-type="${it.type}" data-id="${it.id}">
           <div class="thumb"><img src="${it.img}" alt="${escapeHtml(it.title)}"></div>
           <div class="meta">
             <h3>${escapeHtml(it.title)}</h3>
             <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px"><div class="tag">${it.date}</div><div class="tag">${capitalize(it.type)}</div></div>
             <p>${escapeHtml(it.desc)}</p>
-            <div style="margin-top:8px"><button class="btn" onclick="openModal(event, ${it.id})">查看照片</button></div>
+            <div style="margin-top:8px"><button class="btn" data-id="${it.id}">查看照片</button></div>
           </div>
         </div>
       `).join('');
@@ -217,7 +221,30 @@
     function escapeHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
     function capitalize(s){return s.charAt(0).toUpperCase()+s.slice(1)}
 
-    renderList(EVENTS);
+    // 使用事件委托处理卡片和按钮点击
+    document.addEventListener('click', function(e) {
+      // 处理卡片点击
+      const card = e.target.closest('.card');
+      if (card) {
+        const id = parseInt(card.getAttribute('data-id'));
+        openModal(id);
+        return;
+      }
+      
+      // 处理按钮点击
+      const btn = e.target.closest('.btn');
+      if (btn && btn.textContent === '查看照片') {
+        const id = parseInt(btn.getAttribute('data-id'));
+        openModal(id);
+        e.stopPropagation(); // 阻止事件冒泡到卡片
+        return;
+      }
+      
+      // 处理导航按钮点击
+      if (e.target.matches('nav button')) {
+        e.stopPropagation();
+      }
+    });
 
     /* filtering */
     function filterBy(type){
@@ -227,21 +254,21 @@
     }
 
     /* modal */
-    const modal = document.getElementById('modal');
-    const modalImg = document.getElementById('modalImg');
-    const modalInfo = document.getElementById('modalInfo');
-    function openModal(e, id){
-      if(e && e.stopPropagation) e.stopPropagation();
+    function openModal(id){
       const ev = EVENTS.find(x=>x.id===id);
       if(!ev) return;
       modalImg.src = ev.img;
       modalInfo.textContent = ev.title + ' · ' + ev.date + '\n' + ev.desc;
       modal.classList.add('active');
     }
-    function closeModal(){ modal.classList.remove('active'); }
-    modal.addEventListener('click', (ev)=>{ if(ev.target===modal) closeModal(); });
-
     
+    function closeModal(){ 
+      modal.classList.remove('active'); 
+    }
+    
+    modal.addEventListener('click', (ev)=>{ 
+      if(ev.target===modal) closeModal(); 
+    });
 
     function scrollToSection(id){
       document.getElementById(id).scrollIntoView({behavior:'smooth'});
@@ -254,69 +281,78 @@
     function createConfetti(){
       const canvas = document.getElementById('confettiCanvas');
       const ctx = canvas.getContext('2d');
-      let W = canvas.width = window.innerWidth; let H = canvas.height = window.innerHeight;
+      let W = canvas.width = window.innerWidth; 
+      let H = canvas.height = window.innerHeight;
       const pieces = [];
-      for(let i=0;i<80;i++){ pieces.push({x:Math.random()*W,y:Math.random()*H- H, r:Math.random()*6+4, vx:(Math.random()-0.5)*4, vy:Math.random()*4+2, c:randomColor()}); }
-      let stop=false; let t=0;
-      function frame(){ ctx.clearRect(0,0,W,H); t+=1; for(const p of pieces){ p.x+=p.vx; p.y+=p.vy; p.vy+=0.04; ctx.fillStyle=p.c; ctx.fillRect(p.x,p.y,p.r, p.r*0.6); }
-        if(t>160) stop=true; if(!stop) requestAnimationFrame(frame); else setTimeout(()=>ctx.clearRect(0,0,W,H),600);
+      
+      for(let i=0;i<80;i++){ 
+        pieces.push({
+          x:Math.random()*W,
+          y:Math.random()*H- H, 
+          r:Math.random()*6+4, 
+          vx:(Math.random()-0.5)*4, 
+          vy:Math.random()*4+2, 
+          c:randomColor()
+        }); 
+      }
+      
+      let stop=false; 
+      let t=0;
+      
+      function frame(){ 
+        ctx.clearRect(0,0,W,H); 
+        t+=1; 
+        for(const p of pieces){ 
+          p.x+=p.vx; 
+          p.y+=p.vy; 
+          p.vy+=0.04; 
+          ctx.fillStyle=p.c; 
+          ctx.fillRect(p.x,p.y,p.r, p.r*0.6); 
+        }
+        if(t>160) stop=true; 
+        if(!stop) requestAnimationFrame(frame); 
+        else setTimeout(()=>ctx.clearRect(0,0,W,H),600);
       }
       frame();
-      function randomColor(){ const arr=['#7ee3a8','#4dd0e1','#ffd166','#ff8fab','#c6a4ff']; return arr[Math.floor(Math.random()*arr.length)]; }
+      
+      function randomColor(){ 
+        const arr=['#7ee3a8','#4dd0e1','#ffd166','#ff8fab','#c6a4ff']; 
+        return arr[Math.floor(Math.random()*arr.length)]; 
+      }
     }
 
-    // small usability: prevent button inside card from closing event
-    document.addEventListener('click', function(e){ if(e.target.matches('.card .btn')) e.stopPropagation(); });
-
     // accessibility: keyboard ESC to close modal
-    document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeModal(); });
+    document.addEventListener('keydown', (e)=>{ 
+      if(e.key==='Escape') closeModal(); 
+    });
 
     // small polite note: allow user to replace placeholder images by drag'n'drop onto cards
-    // This is a lightweight in-browser replace (no server). Drag a local image onto the card to preview it.
     document.addEventListener('dragover', (e)=>{ e.preventDefault(); });
     document.addEventListener('drop', async (e)=>{
       e.preventDefault();
-      const dt = e.dataTransfer; if(!dt.files || dt.files.length===0) return;
-      const f = dt.files[0]; if(!f.type.startsWith('image/')) return alert('请拖入图片文件');
-      const reader = new FileReader(); reader.onload = ()=>{
-        // replace the first card image as demo
-        const url = reader.result; const img = document.querySelector('.card .thumb img'); if(img) img.src = url; alert('本地图片已用于预览（仅本地会话，刷新后恢复）。');
+      const dt = e.dataTransfer; 
+      if(!dt.files || dt.files.length===0) return;
+      const f = dt.files[0]; 
+      if(!f.type.startsWith('image/')) return alert('请拖入图片文件');
+      
+      const reader = new FileReader(); 
+      reader.onload = ()=>{
+        const url = reader.result; 
+        const img = document.querySelector('.card .thumb img'); 
+        if(img) img.src = url; 
+        alert('本地图片已用于预览（仅本地会话，刷新后恢复）。');
       };
       reader.readAsDataURL(f);
     });
 
-    // small polish: if user has many events, animate turbine blades
-    // Rotate blades slower when page is idle
-    let spinEl = document.querySelector('.spin');
-    let speed = 6; // seconds per revolution
-    setInterval(()=>{
-      const rect = document.documentElement.getBoundingClientRect();
-      const inView = rect.top===0;
-      // intentionally simple - keep spinning
-    },2000);
+    // Initialize the page
+    renderList(EVENTS);
 
-    // finally: tiny helper for opening modal when clicking anywhere on a card
-    function openModal(eventOrId, maybeId){
-      // overload: (event, id) or (id)
-      let id;
-      if(typeof eventOrId === 'number') id = eventOrId; else id = maybeId;
-      if(!id){ // clicked on card element
-        const el = (eventOrId && eventOrId.currentTarget) || (eventOrId && eventOrId.target);
-      }
-      const ev = EVENTS.find(x=>x.id===id);
-      if(!ev) return;
-      modalImg.src = ev.img; modalInfo.textContent = ev.title + ' · ' + ev.date + '\n' + ev.desc; modal.classList.add('active');
-    }
-
-    // NOTE: we declared openModal above with two different signatures; the btns call openModal(event, id)
-    window.openModal = function(eOrId, id){
-      if(typeof eOrId === 'object' && eOrId.preventDefault){ eOrId.stopPropagation(); openModal(id); }
-      else openModal(eOrId);
-    };
-
-    window.closeModal = closeModal; window.filterBy = filterBy; window.scrollToSection = scrollToSection; window.celebrate = celebrate;
-
+    // Make functions globally available
+    window.closeModal = closeModal; 
+    window.filterBy = filterBy; 
+    window.scrollToSection = scrollToSection; 
+    window.celebrate = celebrate;
   </script>
 </body>
 </html>
-
